@@ -85,7 +85,8 @@ class PersonDetector:
         format = i2c_header_format + "B" + bbox_format + bbox_format + bbox_format + bbox_format + "H"
 
         result = bytearray(struct.calcsize(format))
-        self.i2c_device.readinto(result)
+        with self.i2c_device as i2c:
+            i2c.readinto(result)
         offset=0
         (pad1, pad2, payload_bytes) = struct.unpack_from(i2c_header_format, result, offset)
         offset = offset + struct.calcsize(i2c_header_format)
